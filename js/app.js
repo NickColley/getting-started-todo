@@ -9,7 +9,9 @@
   // EDITING STARTS HERE (you dont need to edit anything above this line)
 
   var db = new PouchDB('todos');
-  var remoteCouch = false;
+
+  // Replace with remote instance, this just replicates to another local instance.
+  var remoteCouch = 'todos_remote';
 
   db.changes({
     since: 'now',
@@ -61,6 +63,10 @@
 
   // Initialise a sync with the remote server
   function sync() {
+    syncDom.setAttribute('data-sync-state', 'syncing');
+    var opts = {live: true};
+    db.replicate.to(remoteCouch, opts, syncError);
+    db.replicate.from(remoteCouch, opts, syncError);
   }
 
   // EDITING STARTS HERE (you dont need to edit anything below this line)
